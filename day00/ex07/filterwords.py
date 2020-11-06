@@ -3,19 +3,23 @@
 import sys
 import re
 
+
 def print_usage():
     print("Usage: python filterwords.py <string> <int>")
 
+
 def hasNumbers(inputString):
     return bool(re.search(r'\d', inputString))
+
 
 if (len(sys.argv) != 3):
     print_usage()
     sys.exit("ERROR")
 
-if hasNumbers(sys.argv[1]) == True:
+if hasNumbers(sys.argv[1]) is True:
     print_usage()
-    sys.exit("ERROR")  
+    sys.exit("ERROR")
+
 try:
     n2 = int(sys.argv[2])
     str1 = sys.argv[1]
