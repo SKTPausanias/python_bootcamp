@@ -40,15 +40,85 @@ class Matrix:
 		txt += " , shape: " + "".join(str(self.shape)) + " }"
 		return txt
 
-lst = [[0.0, 1.0, 2.0, 3.0], [0.0, 2.0, 4.0, 6.0]]
+	def __add__(self, val):
+		try:
+			mres = []
+			if (self.shape != val.shape):
+				raise IndexError
+			for i in range(self.shape[0]):
+				mres.append([])
+			for i in range(self.shape[0]):
+				for j in range(self.shape[1]):
+					mres[i].append(self.data[i][j] + val.data[i][j])
+			return(Matrix(mres))
+		except IndexError:
+			print("Error: Matrices are not same dimension")
 
-m1 = Matrix([[0.0, 1.0, 2.0, 3.0],
-                [0.0, 2.0, 4.0, 6.0]])
+	def __radd__(self, val):
+		return val + self
 
-m2 = Matrix((3, 3))
+	def __sub__(self, val):
+		try:
+			mres = []
+			if (self.shape != val.shape):
+				raise IndexError
+			for i in range(self.shape[0]):
+				mres.append([])
+			for i in range(self.shape[0]):
+				for j in range(self.shape[1]):
+					mres[i].append(self.data[i][j] - val.data[i][j])
+			return(Matrix(mres))
+		except IndexError:
+			print("Error: Matrices are not same dimension")
+	
+	def __rsub__(self, val):
+		return val - self
+	
+	def __truediv__(self, val):
+		try:
+			mres = []
+			for i in range(self.shape[0]):
+				mres.append([])
+			for i in range(self.shape[0]):
+				for j in range(self.shape[1]):
+					mres[i].append(self.data[i][j] / val)
+			return Matrix(mres)
+		except ZeroDivisionError:
+			print("Error: non divisible by 0")
+		except TypeError:
+			print("Error: invalid type")
 
-m3 = Matrix([[0.0, 1.0, 2.0], [3.0, 4.0, 5.0], [6.0, 7.0, 8.0]], (3, 3))
+	def __rtruediv__(self, val):
+		try:
+			mres = []
+			for i in range(self.shape[0]):
+				mres.append([])
+			for i in range(self.shape[0]):
+				for j in range(self.shape[1]):
+					mres[i].append(self.data[i][j] / val)
+			return Matrix(mres)
+		except ZeroDivisionError:
+			print("Error: non divisible by 0")
+		except TypeError:
+			print("Error: invalid type")
 
-print(m1)
-print(m2)
-print(m3)
+	def __mul__(self, val):
+		try:
+			mres = []
+			if (self.shape[1] != val.shape[0]):
+				raise IndexError
+			for i in range(self.shape[0]):
+				mres.append([])
+			for i in range(self.shape[0]):
+				for j in range(val.shape[1]):
+					res = 0.0
+					for k in range(val.shape[0]):
+						res += (self.data[i][k] * val.data[k][j])
+					mres[i].append(res)
+			print(mres)
+			return Matrix(mres)
+		except IndexError:
+			print("Error: Matrices are not same dimension")
+
+	def __rmul__(self, val):
+		return (val * self)
