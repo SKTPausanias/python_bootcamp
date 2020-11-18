@@ -34,4 +34,21 @@ class Bank(object):
 		self.account.append(account)
 
 	def transfer(self, origin, dest, amount):
+		orig = None
+		dst = None
+		for each in self.account:
+			if each.name == origin or each.id == origin:
+				orig = each
+			if each.name == dest or each.id == dest:
+				dst = each
+		if orig is None or dst is None:
+			print("Invalid account.")
+			return
+		if orig == dst:
+			print("Invalid transaction")
+			return
+		if orig.value < amount:
+			print("Not enough money to make the transaction")
+			return
+
 	def fix_account(self, account):
