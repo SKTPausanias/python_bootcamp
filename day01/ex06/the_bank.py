@@ -50,5 +50,12 @@ class Bank(object):
 		if orig.value < amount:
 			print("Not enough money to make the transaction")
 			return
+		
+		orig.value -= amount
+		dst.value += amount
+		print("Transaction succesful:\n" + "\tFrom {} to {}.".format(dst.name, orig.name))
 
-	def fix_account(self, account):
+	#def fix_account(self, account):
+
+print(len(Account.__dict__))
+print(len(dir(Account)))
