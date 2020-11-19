@@ -1,7 +1,29 @@
 import time
 from random import randint
+from string import capwords
+from functools import wraps
+import getpass
 
-
+def log(func):
+	@wraps(func)
+	def wrapper(*args, **kwargs):
+		start = time.time()
+		ret = func(*args, **kwargs)
+		ex_time = time.time() - start
+		if int(ex_time) > 0:
+			t = "s"
+		else:
+			ex_time *= 1000
+			t = "ms"
+		f = open("machine.log", "a")
+		f.write("({})Running: {}    [ exec-time = {} {} ]\n".format(
+			getpass.getuser(),
+			(capwords(func.__name__.replace('_', ' '))).ljust(13),
+			round(ex_time, 3),
+			str(t).ljust(2)))
+		f.close()	
+		return ret
+	return wrapper
 
 class CoffeeMachine():
 
