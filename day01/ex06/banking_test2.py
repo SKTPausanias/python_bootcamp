@@ -13,7 +13,6 @@ if __name__ == "__main__":
         zip='100-064',
         value=6460.0,
         ref='58ba2b9954cd278eda8a84147ca73c87',
-        info=None
     ))
 
     if bank.transfer('William John', 'Smith Jane', 1000.0) is False:
