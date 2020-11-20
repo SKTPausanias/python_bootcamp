@@ -1,4 +1,4 @@
-import numpy as np
+import math
 
 class TinyStatistician():
 	def mean(self, x):
@@ -23,26 +23,42 @@ class TinyStatistician():
 		if len(x) < 1:
 			return None
 		x.sort()
-		if percentile == 25:
-			if len(x) % 2 == 0:
-				return self.median(x[:(len(x)//2) - 1])
-			else:
-				return self.median(x[:(len(x)//2) + 1])
-		elif percentile == 75:
-			if len(x) % 2 == 0:
-				return (self.median(x[len(x)//2:]))
-			else:	
-				return (self.median(x[len(x)//2:]))
-
+		if len(x) % 2 == 0:
+			median1 = x[:(len(x)//2)]
+			median2 = x[len(x)//2:]
+			if percentile == 25:
+				return self.median(median1)
+			elif percentile == 75:
+				return self.median(median2)
+		else:
+			median1 = x[:(len(x)//2)]
+			median2 = x[len(x)//2 + 1:]
+			if percentile == 25:
+				return self.median(median1)
+			elif percentile == 75:
+				return self.median(median2)
 	
+	def var(self, x):
+		if len(x) < 1:
+			return None
+		m = self.mean(x)
+		ret = 0.0
+		for each in x:
+			ret += float(each - m) ** 2
+		return float(ret / len(x))
+
+	def std(self, x):
+		if len(x) < 1:
+			return None
+		return math.sqrt(self.var(x))
+
 
 
 if __name__ == "__main__":
 	ts = TinyStatistician()
-	arr = [1, 1, 8, 12, 13, 13, 14, 16, 19, 22, 27, 28, 31]
-	#print(ts.median(arr))
+	arr = [1, 42, 10, 300, 59]
+	print(ts.median(arr))
 	print(ts.quartiles(arr, 25))
 	print(ts.quartiles(arr, 75))
-	print()
-	print(np.percentile(arr, 25))
-	print(np.percentile(arr, 75))
+	print(ts.var(arr))
+	print(ts.std(arr))
