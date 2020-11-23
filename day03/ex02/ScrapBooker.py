@@ -28,16 +28,16 @@ class ScrapBooker():
 
 def main():
     img = ImageProcessor()
-    slic = ScrapBooker()
+    sb = ScrapBooker()
     array = img.load("../assets/blue.png")
-    retArray = slic.crop(array, (200, 100))
-    img.display(retArray)
-    retArray = slic.thin(array, 4, 0)
-    img.display(retArray)
-    retArray = slic.juxtapose(array, 2, 0)
-    img.display(retArray)
-    retArray = slic.mosaic(array, (10, 4))
-    img.display(retArray)
+    ret = sb.crop(array, (200, 100))
+    img.display(ret)
+    ret = sb.thin(array, 4, 0)
+    img.display(ret)
+    ret = sb.juxtapose(array, 2, 0)
+    img.display(ret)
+    ret = sb.mosaic(array, (10, 4))
+    img.display(ret)
 
 if __name__ == "__main__":
     main()

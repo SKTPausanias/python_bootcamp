@@ -9,10 +9,10 @@ class ImageProcessor(object):
     
     def display(self, arr):
         plt.imshow(arr)
+        plt.show()
 
 if __name__ == "__main__":
     imp = ImageProcessor()
-    data = imp.load("../resources/42AI.png")
-    print(data)
+    data = imp.load("../assets/blue.png")
     imp.display(data)
     plt.show()
