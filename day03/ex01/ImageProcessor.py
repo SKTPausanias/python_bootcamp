@@ -12,5 +12,6 @@ class ImageProcessor(object):
 
 if __name__ == "__main__":
     imp = ImageProcessor()
-    data = imp.load("../assets/img.png")
+    data = imp.load("../assets/blue.png")
     imp.display(data)
+    plt.show()
