@@ -35,28 +35,24 @@ class KmeansClustering:
 		plt.scatter(X[:,0], X[:,1], s=7)
 		plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
 		plt.show()
-		centers_old = np.zeros(self.centroids.shape) # to store old centers
-		#centers_old = deepcopy(self.centroids)
-		centers_new = deepcopy(self.centroids)
-		error = np.linalg.norm(centers_new - centers_old)
-		#X.shape
+		#centers_old = np.zeros(self.centroids.shape) # to store old centers
+		#centers_new = deepcopy(self.centroids)
+		#error = np.linalg.norm(centers_new - centers_old)
+		X.shape
 		clusters = np.zeros(n)
 		distances = np.zeros((n, self.ncentroid))
 		for i in range(self.max_iter):
 			for i in range(self.ncentroid):
-				distances[:,i] = np.linalg.norm(X - centers_new[i], axis=1)
+				distances[:,i] = np.linalg.norm(X - self.centroids[i], axis=1)
 			clusters = np.argmin(distances, axis = 1)
+			#centers_old = deepcopy(centers_new)
 			for i in range(self.ncentroid):
-				centers_new[i] = np.mean(X[clusters == i], axis=0)
-			error = np.linalg.norm(centers_new - centers_old)
-			if error == 0:
-				print(i)
-				break
-			#centers_old = centers_new
-		#self.centroids = centers_new
-
+				self.centroids[i] = np.mean(X[clusters == i], axis=0)
+			#error = np.linalg.norm(centers_new - centers_old)
+			#if error == 0:
+			#	break
 		plt.scatter(X[:,0], X[:,1], s=7)
-		plt.scatter(centers_new[:,0], centers_new[:,1], marker='*', c='g', s=150)
+		plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
 		plt.show()
 	
 	def predict(self, X) -> np.ndarray:
@@ -70,11 +66,18 @@ class KmeansClustering:
 			This function should not raise any Exception.
 		"""
 		#planets = ['The flying cities of Venus', 'United Nations of Earth', 'Mars Republic', 'Asteroids Belt colonies']
-
+		planets = ['The flying cities of Venus', 'United Nations of Earth', 'Mars Republic', 'Asteroids Belt colonies']
+		ret = np.chararray(shape=(X.shape[0], 2), itemsize=26)
+		for i, citiziens in enumerate(X):
+			distances = [self.euclidean_distance(citiziens, centroid) for centroid in self.centroids]
+			idx = distances.index(min(distances))
+			ret[i][0] = i
+			ret[i][1] = planets[idx]
+		return ret
 
 def main():
 	f = open("../resources/solar_system_census.csv")
-	k = KmeansClustering(max_iter=300)
+	k = KmeansClustering(max_iter=100)
 	lines = f.readlines()
 	data = []
 	for i in range(len(lines)):
@@ -83,22 +86,17 @@ def main():
 	print(dataset.shape)
 	#dataset = np.delete(dataset, 0, 1)
 	print(dataset)
-	n1 = dataset[:,0]
-	norm = np.linalg.norm(n1)
-	n1 = n1 / norm
-	print(n1)
+	#n1 = dataset[:,0]
+	#norm = np.linalg.norm(n1)
+	#n1 = n1 / norm
+	#print(n1)
 	norm = np.linalg.norm(dataset, axis = 0)
-	print(norm)
 	dataset = dataset / norm
+	
 	print(dataset)
 	#print(np.ndim(dataset))
-	#print(dataset[0][1:])
-	#print(dataset[1][1:])
-	#a = dataset[0][1:]
-	#b = dataset[1][1:]
-	#print(k.euclidean_distance(a, b))
 	k.fit(dataset)
-	#print(k.predict(dataset))
+	print(k.predict(dataset))
 
 if __name__ == "__main__":
     main()
