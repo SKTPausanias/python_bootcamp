@@ -30,8 +30,6 @@ class KmeansClustering:
 		n = X.shape[0]
 		c = X.shape[1]
 		self.centroids = np.random.randn(self.ncentroid, c)*std + mean
-		print("centers lulw")
-		print(self.centroids)
 		plt.scatter(X[:,0], X[:,1], s=7)
 		plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
 		plt.show()
@@ -66,14 +64,19 @@ class KmeansClustering:
 			This function should not raise any Exception.
 		"""
 		#planets = ['The flying cities of Venus', 'United Nations of Earth', 'Mars Republic', 'Asteroids Belt colonies']
-		planets = ['The flying cities of Venus', 'United Nations of Earth', 'Mars Republic', 'Asteroids Belt colonies']
-		ret = np.chararray(shape=(X.shape[0], 2), itemsize=26)
-		for i, citiziens in enumerate(X):
-			distances = [self.euclidean_distance(citiziens, centroid) for centroid in self.centroids]
-			idx = distances.index(min(distances))
-			ret[i][0] = i
-			ret[i][1] = planets[idx]
-		return ret
+		res = list(X.shape[0], 1)
+		print(res)
+		distances = np.zeros(self.ncentroid)
+		print(distances)
+		for i in range(X.shape[0]):
+			min = 0
+			for j in range(self.ncentroid):
+				if ((np.linalg.norm(X[i] - self.centroids[j])) < (np.linalg.norm(X[i] - self.centroids[min]))):
+					min = j
+			np.append(X[i], float(min))
+			print(X[i])
+			print(min)
+			
 
 def main():
 	f = open("../resources/solar_system_census.csv")
@@ -83,20 +86,12 @@ def main():
 	for i in range(len(lines)):
 		data.append(lines[i].split(','))
 	dataset = np.delete(np.array(data[1:], dtype='float'), 0, 1)
-	print(dataset.shape)
-	#dataset = np.delete(dataset, 0, 1)
-	print(dataset)
-	#n1 = dataset[:,0]
-	#norm = np.linalg.norm(n1)
-	#n1 = n1 / norm
-	#print(n1)
-	norm = np.linalg.norm(dataset, axis = 0)
-	dataset = dataset / norm
-	
-	print(dataset)
+	dataset = dataset / np.linalg.norm(dataset, axis = 0)
+	#print(dataset)
 	#print(np.ndim(dataset))
 	k.fit(dataset)
-	print(k.predict(dataset))
+	k.predict(dataset)
+	#print(k.predict(dataset))
 
 if __name__ == "__main__":
     main()
