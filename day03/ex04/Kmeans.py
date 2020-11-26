@@ -3,6 +3,7 @@ import numpy as np
 import math
 import random
 import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
 plt.style.use('ggplot')
 
 class KmeansClustering:
@@ -30,28 +31,33 @@ class KmeansClustering:
 		n = X.shape[0]
 		c = X.shape[1]
 		self.centroids = np.random.randn(self.ncentroid, c)*std + mean
-		plt.scatter(X[:,0], X[:,1], s=7)
-		plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
-		plt.show()
+		#plt.scatter(X[:,0], X[:,1], s=7)
+		#plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
+		#plt.show()
 		#centers_old = np.zeros(self.centroids.shape) # to store old centers
 		#centers_new = deepcopy(self.centroids)
 		#error = np.linalg.norm(centers_new - centers_old)
 		X.shape
-		clusters = np.zeros(n)
+		self.clusters = np.zeros(n)
 		distances = np.zeros((n, self.ncentroid))
 		for i in range(self.max_iter):
 			for i in range(self.ncentroid):
 				distances[:,i] = np.linalg.norm(X - self.centroids[i], axis=1)
-			clusters = np.argmin(distances, axis = 1)
+			self.clusters = np.argmin(distances, axis = 1)
+			#print(clusters)
 			#centers_old = deepcopy(centers_new)
 			for i in range(self.ncentroid):
-				self.centroids[i] = np.mean(X[clusters == i], axis=0)
+				self.centroids[i] = np.mean(X[self.clusters == i], axis=0)
 			#error = np.linalg.norm(centers_new - centers_old)
 			#if error == 0:
 			#	break
-		plt.scatter(X[:,0], X[:,1], s=7)
-		plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
-		plt.show()
+		self.table = np.zeros((X.shape[0], X.shape[1] + 1))
+		self.table[:,:-1] = X
+		self.table[:,3] = self.clusters
+		#print(self.table)
+		#plt.scatter(X[:,0], X[:,1], s=7)
+		#plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
+		#plt.show()
 	
 	def predict(self, X) -> np.ndarray:
 		"""
@@ -63,20 +69,33 @@ class KmeansClustering:
 		Raises:
 			This function should not raise any Exception.
 		"""
-		#planets = ['The flying cities of Venus', 'United Nations of Earth', 'Mars Republic', 'Asteroids Belt colonies']
-		res = list(X.shape[0], 1)
-		print(res)
-		distances = np.zeros(self.ncentroid)
-		print(distances)
+		#table = np.zeros((X.shape[0], X.shape[1] + 1))
+		#table[:,:-1] = X
+		#for i in range(X.shape[0]):
+		#	min = 0
+		#	for j in range(self.ncentroid):
+		#		if ((np.linalg.norm(X[i] - self.centroids[j])) < (np.linalg.norm(X[i] - self.centroids[min]))):
+		#			min = j
+		#	table[i][3] = float(min)
+		#print(table)
+		y = [self.table[self.table[:,3]==k] for k in np.unique(self.table[:,3])]
+		means = np.zeros((self.ncentroid, X.shape[1] + 1))
+		i = 0
+		for each in y:
+			means[i] = each.mean(axis=0)
+			i += 1
+		means = means[means[:,0].argsort()]
+		ret = np.chararray(shape=(X.shape[0], 1), itemsize=26)
 		for i in range(X.shape[0]):
-			min = 0
-			for j in range(self.ncentroid):
-				if ((np.linalg.norm(X[i] - self.centroids[j])) < (np.linalg.norm(X[i] - self.centroids[min]))):
-					min = j
-			np.append(X[i], float(min))
-			print(X[i])
-			print(min)
-			
+			if (self.table[i][3] == means[0][3]):
+				ret[i] = "The flying cities of Venus"
+			elif (self.table[i][3] == means[1][3]):
+				ret[i] = "United Nations of Earth"
+			elif (self.table[i][3] == means[2][3]):
+				ret[i] = "Mars Republic"
+			elif (self.table[i][3] == means[3][3]):
+				ret[i] = "Asteroids Belt colonies"
+		return ret
 
 def main():
 	f = open("../resources/solar_system_census.csv")
@@ -90,8 +109,16 @@ def main():
 	#print(dataset)
 	#print(np.ndim(dataset))
 	k.fit(dataset)
-	k.predict(dataset)
-	#print(k.predict(dataset))
+	#k.predict(dataset)
+	print(k.predict(dataset))
+
+	colors = 10*["r", "g", "c", "b", "k"]
+	for centroid in k.centroids:
+		plt.scatter(centroid[0], centroid[1], s = 130, marker = "x")
+	for i in range(k.table.shape[0]):
+		color = colors[int(k.table[i][3])]
+		plt.scatter(k.table[i][0], k.table[i][1], color = color,s = 30)
+	plt.show()
 
 if __name__ == "__main__":
     main()
