@@ -31,21 +31,29 @@ class KmeansClustering:
 		n = X.shape[0]
 		c = X.shape[1]
 		self.centroids = np.random.randn(self.ncentroid, c)*std + mean
-		#plt.scatter(X[:,0], X[:,1], s=7)
-		#plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
-		#plt.show()
 		#centers_old = np.zeros(self.centroids.shape) # to store old centers
 		#centers_new = deepcopy(self.centroids)
 		#error = np.linalg.norm(centers_new - centers_old)
-		X.shape
+		colors = 10*["r", "g", "c", "b", "k"]
+		fig=plt.figure()
+		ax=Axes3D(fig)
+		for i in range(X.shape[0]):
+			color = colors[4]
+			ax.scatter(X[i][0],X[i][1],X[i][2], color = color)
+		i = 0
+		for centroid in self.centroids:
+			color = colors[i]
+			ax.scatter(centroid[0], centroid[1], centroid[2], s = 130 , color = color, marker = "x")
+			i += 1
+		plt.show()
 		self.clusters = np.zeros(n)
 		distances = np.zeros((n, self.ncentroid))
 		for i in range(self.max_iter):
 			for i in range(self.ncentroid):
 				distances[:,i] = np.linalg.norm(X - self.centroids[i], axis=1)
 			self.clusters = np.argmin(distances, axis = 1)
-			#print(clusters)
 			#centers_old = deepcopy(centers_new)
+			#recalculate centroids
 			for i in range(self.ncentroid):
 				self.centroids[i] = np.mean(X[self.clusters == i], axis=0)
 			#error = np.linalg.norm(centers_new - centers_old)
@@ -54,10 +62,6 @@ class KmeansClustering:
 		self.table = np.zeros((X.shape[0], X.shape[1] + 1))
 		self.table[:,:-1] = X
 		self.table[:,3] = self.clusters
-		#print(self.table)
-		#plt.scatter(X[:,0], X[:,1], s=7)
-		#plt.scatter(self.centroids[:,0], self.centroids[:,1], marker='*', c='g', s=150)
-		#plt.show()
 	
 	def predict(self, X) -> np.ndarray:
 		"""
@@ -78,9 +82,11 @@ class KmeansClustering:
 		#			min = j
 		#	table[i][3] = float(min)
 		#print(table)
+		#agrupar por los cluster a los que corresponden
 		y = [self.table[self.table[:,3]==k] for k in np.unique(self.table[:,3])]
 		means = np.zeros((self.ncentroid, X.shape[1] + 1))
 		i = 0
+		#calcular medias de los grupos
 		for each in y:
 			means[i] = each.mean(axis=0)
 			i += 1
@@ -106,22 +112,10 @@ def main():
 		data.append(lines[i].split(','))
 	dataset = np.delete(np.array(data[1:], dtype='float'), 0, 1)
 	dataset = dataset / np.linalg.norm(dataset, axis = 0)
-	#print(dataset)
-	#print(np.ndim(dataset))
+
 	k.fit(dataset)
-	#k.predict(dataset)
 	print(k.predict(dataset))
 
-	#colors = 10*["r", "g", "c", "b", "k"]
-	#i = 0
-	#for centroid in k.centroids:
-	#	color = colors[i]
-	#	plt.scatter(centroid[0], centroid[1], s = 130, color = color, marker = "x")
-	#	i += 1
-	#for i in range(k.table.shape[0]):
-	#	color = colors[int(k.table[i][3])]
-	#	plt.scatter(k.table[i][0], k.table[i][1], color = color,s = 30)
-	#plt.show()
 	colors = 10*["r", "g", "c", "b", "k"]
 	fig=plt.figure()
 	ax=Axes3D(fig)
