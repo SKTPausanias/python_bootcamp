@@ -3,7 +3,7 @@ import numpy as np
 import math
 import random
 import matplotlib.pyplot as plt
-from mpl_toolkits import mplot3d
+from mpl_toolkits.mplot3d import Axes3D
 plt.style.use('ggplot')
 
 class KmeansClustering:
@@ -112,12 +112,27 @@ def main():
 	#k.predict(dataset)
 	print(k.predict(dataset))
 
+	#colors = 10*["r", "g", "c", "b", "k"]
+	#i = 0
+	#for centroid in k.centroids:
+	#	color = colors[i]
+	#	plt.scatter(centroid[0], centroid[1], s = 130, color = color, marker = "x")
+	#	i += 1
+	#for i in range(k.table.shape[0]):
+	#	color = colors[int(k.table[i][3])]
+	#	plt.scatter(k.table[i][0], k.table[i][1], color = color,s = 30)
+	#plt.show()
 	colors = 10*["r", "g", "c", "b", "k"]
-	for centroid in k.centroids:
-		plt.scatter(centroid[0], centroid[1], s = 130, marker = "x")
+	fig=plt.figure()
+	ax=Axes3D(fig)
 	for i in range(k.table.shape[0]):
 		color = colors[int(k.table[i][3])]
-		plt.scatter(k.table[i][0], k.table[i][1], color = color,s = 30)
+		ax.scatter(k.table[i][0],k.table[i][1],k.table[i][2], color = color)
+	i = 0
+	for centroid in k.centroids:
+		color = colors[i]
+		ax.scatter(centroid[0], centroid[1], centroid[2], s = 130 , color = color, marker = "x")
+		i += 1
 	plt.show()
 
 if __name__ == "__main__":
