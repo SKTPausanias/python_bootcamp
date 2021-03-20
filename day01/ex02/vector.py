@@ -109,5 +109,3 @@ class Vector:
 
     def __rmul__(self, val):
         return (self * val)
-
-                    
