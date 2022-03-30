@@ -1,5 +1,4 @@
 from FileLoader import FileLoader
-import pandas as pd
 
 def howManyMedalsByCountry(df, country_name):
 	country = df.loc[df['Team'] == country_name]

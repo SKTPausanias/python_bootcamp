@@ -1,5 +1,4 @@
 from FileLoader import FileLoader
-import pandas as pd
 
 def youngestFellah(df, olimpicYear):
 	fem = df['Age'].loc[df['Sex'] == 'F'].loc[df['Year'] == olimpicYear].min()

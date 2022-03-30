@@ -1,5 +1,4 @@
 from FileLoader import FileLoader
-import pandas as pd
 
 def proportionBySport(df, olimpicYear, sport, gender):
     total = df.Name[(df.Year == olimpicYear) & (df.Sex == gender)].drop_duplicates().count()
